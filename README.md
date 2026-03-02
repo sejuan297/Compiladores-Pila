@@ -1,33 +1,36 @@
-# Compilador de Pila - Proyecto de Estructuras de Datos
+# Compilador de Pila
 
-## Descripción
-Este proyecto implementa un compilador simple basado en pila para la materia de Estructuras de Datos. El sistema puede compilar expresiones matemáticas básicas y ejecutarlas en una máquina virtual.
+Un compilador educativo basado en pila que permite al usuario ingresar expresiones matemáticas y las compila a bytecode para ejecución en una máquina virtual.
 
-## Componentes
+## Características
 
-- `pila.py` - Implementación de la estructura de datos pila
-- `instrucciones.py` - Códigos de operación para la máquina virtual
-- `maquina_virtual.py` - Máquina virtual que ejecuta el bytecode
-- `ejemplo.py` - Ejemplos de uso del compilador
+- Ingresa tus propias expresiones matemáticas en tiempo real
+- Convierte expresiones infijas a notación postfija (RPN)
+- Genera bytecode ejecutable para máquina virtual de pila
+- Operaciones aritméticas (+, -, *, /) y paréntesis
+- Muestra el bytecode generado paso a paso
 
-## Cómo ejecutar
+## Uso
 
 ```bash
+cd NuevoCompiladorPila
 python ejemplo.py
 ```
 
-## Ejemplos
+## Comandos
 
-El compilador puede procesar expresiones como:
-- `(10 + 5) * (8 - 3) = 75`
-- Variables: `x = 7; y = 3; z = x * y + 10`
+- Expresiones matemáticas: `2 + 3`, `(10 + 5) * (8 - 3)`
+- ayuda: Muestra ejemplos de uso
+- demo: Ejecuta demostración predefinida
+- salir: Termina el programa
 
-## Estructura del compilador
+## Arquitectura
 
-1. **Análisis**: Convierte expresiones a notación postfija
-2. **Generación**: Crea bytecode para la máquina virtual
-3. **Ejecución**: La máquina virtual procesa el bytecode usando una pila
+- `pila.py`: Estructura de datos LIFO
+- `instrucciones.py`: OpCodes y definición de instrucciones
+- `maquina_virtual.py`: Motor de ejecución de bytecode
+- `ejemplo.py`: Compilador interactivo principal
 
-## Referencias
-- Compiladores: Principios, técnicas y herramientas - Aho et al.
-- Apuntes de clase de Estructuras de Datos
+## Licencia
+
+Proyecto educativo de código abierto.

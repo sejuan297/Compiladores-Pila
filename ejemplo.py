@@ -2,170 +2,147 @@ from typing import List
 from instrucciones import Instruccion, OpCode
 from maquina_virtual import MaquinaVirtual
 
-class CompiladorSimple:
-    """
-    COMPILADOR SENCILLO - DEMOSTRACIÓN EDUCATIVA
+class CompiladorPila:
+    """Compilador de pila interactivo."""
     
-    FUNCIÓN EN EL PROCESO DE COMPILACIÓN:
-    Transforma expresiones matemáticas simples en bytecode que
-    la máquina virtual puede ejecutar. Es una versión simplificada
-    de un compilador real.
+    def __init__(self):
+        self.variables = {}
     
-    IMPORTANCIA:
-    - Demuestra el proceso de análisis y generación de código
-    - Muestra cómo las expresiones se convierten en operaciones de pila
-    - Es el puente entre el lenguaje humano y el lenguaje máquina
+    def infija_a_postfija(self, expresion: str) -> List[str]:
+        """Convierte expresión infija a notación postfija (RPN)."""
+        import re
+        
+        precedencia = {'+': 1, '-': 1, '*': 2, '/': 2}
+        tokens = re.findall(r'(\d+\.?\d*|[+\-*/()])', expresion.replace(' ', ''))
+        
+        salida = []
+        pila_operadores = []
+        
+        for token in tokens:
+            if token.replace('.', '').isdigit():
+                salida.append(token)
+            elif token in precedencia:
+                while (pila_operadores and pila_operadores[-1] != '(' and
+                       precedencia.get(pila_operadores[-1], 0) >= precedencia[token]):
+                    salida.append(pila_operadores.pop())
+                pila_operadores.append(token)
+            elif token == '(':
+                pila_operadores.append(token)
+            elif token == ')':
+                while pila_operadores and pila_operadores[-1] != '(':
+                    salida.append(pila_operadores.pop())
+                if pila_operadores and pila_operadores[-1] == '(':
+                    pila_operadores.pop()
+        
+        while pila_operadores:
+            salida.append(pila_operadores.pop())
+        
+        return salida
     
-    NOTA: Este es un compilador educativo que trabaja con expresiones
-    predefinidas, no con análisis léxico completo.
-    """
-    
-    @staticmethod
-    def compilar_expresion_simple() -> List[Instruccion]:
-        """
-        Compila la expresión: resultado = (10 + 5) * (8 - 3)
+    def compilar_expresion(self, expresion: str, nombre_variable: str = "resultado") -> List[Instruccion]:
+        """Compila una expresión matemática a bytecode."""
+        postfija = self.infija_a_postfija(expresion)
+        programa = []
         
-        PASOS DE COMPILACIÓN:
-        1. Analizar la expresión matemática
-        2. Convertir a notación postfija (RPN)
-        3. Generar bytecode para máquina de pila
+        for token in postfija:
+            if token.replace('.', '').isdigit():
+                programa.append(Instruccion(OpCode.PUSH_CONST, float(token)))
+            elif token == '+':
+                programa.append(Instruccion(OpCode.ADD))
+            elif token == '-':
+                programa.append(Instruccion(OpCode.SUB))
+            elif token == '*':
+                programa.append(Instruccion(OpCode.MUL))
+            elif token == '/':
+                programa.append(Instruccion(OpCode.DIV))
         
-        EXPRESIÓN: (10 + 5) * (8 - 3)
-        RPN: 10 5 + 8 3 - *
-        BYTECODE:
-        """
-        programa = [
-            # Calcular (10 + 5)
-            Instruccion(OpCode.PUSH_CONST, 10),  # [10]
-            Instruccion(OpCode.PUSH_CONST, 5),   # [10, 5]
-            Instruccion(OpCode.ADD),              # [15]
-            
-            # Calcular (8 - 3)
-            Instruccion(OpCode.PUSH_CONST, 8),    # [15, 8]
-            Instruccion(OpCode.PUSH_CONST, 3),   # [15, 8, 3]
-            Instruccion(OpCode.SUB),              # [15, 5]
-            
-            # Multiplicar resultados
-            Instruccion(OpCode.MUL),              # [75]
-            
-            # Almacenar en variable
-            Instruccion(OpCode.STORE, "resultado"),
-            
-            # Imprimir resultado
-            Instruccion(OpCode.LOAD, "resultado"),
-            Instruccion(OpCode.PRINT),
-            
-            # Finalizar programa
-            Instruccion(OpCode.HALT)
-        ]
-        
-        return programa
-    
-    @staticmethod
-    def compilar_programa_variables() -> List[Instruccion]:
-        """
-        Compila un programa con manejo de variables:
-        
-        x = 7
-        y = 3
-        z = x * y + 10
-        print(z)
-        
-        DEMUESTRA:
-        - Declaración y asignación de variables
-        - Uso de variables en expresiones
-        - Operaciones combinadas
-        """
-        programa = [
-            # x = 7
-            Instruccion(OpCode.PUSH_CONST, 7),
-            Instruccion(OpCode.STORE, "x"),
-            
-            # y = 3
-            Instruccion(OpCode.PUSH_CONST, 3),
-            Instruccion(OpCode.STORE, "y"),
-            
-            # Calcular z = x * y + 10
-            Instruccion(OpCode.LOAD, "x"),        # [x]
-            Instruccion(OpCode.LOAD, "y"),        # [x, y]
-            Instruccion(OpCode.MUL),              # [x*y]
-            Instruccion(OpCode.PUSH_CONST, 10),   # [x*y, 10]
-            Instruccion(OpCode.ADD),              # [x*y+10]
-            Instruccion(OpCode.STORE, "z"),
-            
-            # Imprimir z
-            Instruccion(OpCode.LOAD, "z"),
-            Instruccion(OpCode.PRINT),
-            
-            Instruccion(OpCode.HALT)
-        ]
+        programa.append(Instruccion(OpCode.STORE, nombre_variable))
+        programa.append(Instruccion(OpCode.LOAD, nombre_variable))
+        programa.append(Instruccion(OpCode.PRINT))
+        programa.append(Instruccion(OpCode.HALT))
         
         return programa
 
-def mostrar_programa(programa: List[Instruccion], titulo: str) -> None:
-    """
-    Muestra el bytecode generado de forma legible.
-    
-    FUNCIÓN: Facilita la comprensión del código compilado.
-    IMPORTANCIA: Permite verificar el resultado del proceso de compilación.
-    """
-    print(f"\n=== {titulo} ===")
+def mostrar_programa(programa: List[Instruccion], expresion: str) -> None:
+    """Muestra el bytecode generado."""
+    print(f"\n=== EXPRESIÓN: {expresion} ===")
     print("BYTECODE GENERADO:")
     print("POS  INSTRUCCIÓN      DESCRIPCIÓN")
     print("-" * 50)
     
-    for i, instr in enumerate(programa):
-        descripcion = _describir_instruccion(instr)
-        print(f"{i:02d}   {str(instr):<15}   {descripcion}")
-
-def _describir_instruccion(instruccion: Instruccion) -> str:
-    """Genera una descripción legible de cada instrucción."""
     descripciones = {
-        OpCode.PUSH_CONST: f"Apilar constante {instruccion.argumento}",
-        OpCode.POP: "Desapilar valor",
-        OpCode.ADD: "Sumar: a + b",
-        OpCode.SUB: "Restar: a - b", 
-        OpCode.MUL: "Multiplicar: a * b",
-        OpCode.DIV: "Dividir: a / b",
-        OpCode.STORE: f"Almacenar en variable '{instruccion.argumento}'",
-        OpCode.LOAD: f"Cargar variable '{instruccion.argumento}'",
-        OpCode.PRINT: "Imprimir valor",
-        OpCode.HALT: "Detener ejecución"
+        OpCode.PUSH_CONST: lambda arg: f"Apilar constante {arg}",
+        OpCode.POP: lambda arg: "Desapilar valor",
+        OpCode.ADD: lambda arg: "Sumar: a + b",
+        OpCode.SUB: lambda arg: "Restar: a - b", 
+        OpCode.MUL: lambda arg: "Multiplicar: a * b",
+        OpCode.DIV: lambda arg: "Dividir: a / b",
+        OpCode.STORE: lambda arg: f"Almacenar en variable '{arg}'",
+        OpCode.LOAD: lambda arg: f"Cargar variable '{arg}'",
+        OpCode.PRINT: lambda arg: "Imprimir valor",
+        OpCode.HALT: lambda arg: "Detener ejecución"
     }
     
-    return descripciones.get(instruccion.opcode, "Instrucción desconocida")
+    for i, instr in enumerate(programa):
+        descripcion = descripciones.get(instr.opcode, lambda arg: "Instrucción desconocida")(instr.argumento)
+        print(f"{i:02d}   {str(instr):<15}   {descripcion}")
 
-def ejecutar_demostracion() -> None:
-    """
-    FUNCIÓN PRINCIPAL - DEMOSTRACIÓN COMPLETA
+def interfaz_interactiva():
+    """Interfaz principal del compilador interactivo."""
+    compilador = CompiladorPila()
     
-    Muestra el proceso completo de compilación y ejecución:
-    1. Compilación de expresiones a bytecode
-    2. Visualización del código generado
-    3. Ejecución en la máquina virtual
-    4. Resultado final
-    """
-    print("DEMOSTRACIÓN DEL COMPILADOR DE PILA")
     print("=" * 60)
+    print("COMPILADOR DE PILA INTERACTIVO")
+    print("=" * 60)
+    print("Operaciones soportadas: +, -, *, /")
+    print("Puedes usar paréntesis: ( )")
+    print("Escribe 'ayuda' para ver ejemplos")
+    print("Escribe 'salir' para terminar")
+    print("-" * 60)
     
-    # Demostración 1: Expresión matemática compleja
-    compilador = CompiladorSimple()
-    programa1 = compilador.compilar_expresion_simple()
-    mostrar_programa(programa1, "EXPRESIÓN MATEMÁTICA: (10 + 5) * (8 - 3)")
-    
-    print("\nEJECUTANDO PROGRAMA 1:")
-    maquina = MaquinaVirtual()
-    maquina.ejecutar(programa1)
-    
-    # Demostración 2: Programa con variables
-    programa2 = compilador.compilar_programa_variables()
-    mostrar_programa(programa2, "PROGRAMA CON VARIABLES")
-    
-    print("\nEJECUTANDO PROGRAMA 2:")
-    maquina2 = MaquinaVirtual()
-    maquina2.ejecutar(programa2)
-    
-    print("\nDEMOSTRACIÓN COMPLETADA CON ÉXITO")
+    while True:
+        try:
+            entrada = input("\n> ").strip()
+            
+            if entrada.lower() in ['salir', 'exit', 'quit']:
+                print("¡Hasta luego!")
+                break
+            
+            if entrada.lower() == 'ayuda':
+                print("\n=== EJEMPLOS ===")
+                print("2 + 3")
+                print("(2 + 3) * 4")
+                print("10 + 5 * 2")
+                print("(100 - 50) / (25 + 25)")
+                continue
+            
+            if entrada.lower() == 'demo':
+                print("\n=== DEMOSTRACIÓN ===")
+                expresion1 = "(10 + 5) * (8 - 3)"
+                programa1 = compilador.compilar_expresion(expresion1)
+                mostrar_programa(programa1, expresion1)
+                print(f"\nEJECUTANDO: {expresion1}")
+                maquina1 = MaquinaVirtual()
+                maquina1.ejecutar(programa1)
+                continue
+            
+            if not entrada:
+                print("Por favor ingresa una expresión válida.")
+                continue
+            
+            programa = compilador.compilar_expresion(entrada)
+            mostrar_programa(programa, entrada)
+            
+            print(f"\nEJECUTANDO: {entrada}")
+            maquina = MaquinaVirtual()
+            maquina.ejecutar(programa)
+            
+        except KeyboardInterrupt:
+            print("\n\n¡Hasta luego!")
+            break
+        except Exception as e:
+            print(f"Error: {e}")
+            print("Por favor verifica tu expresión e intenta de nuevo.")
 
 if __name__ == "__main__":
-    ejecutar_demostracion()
+    interfaz_interactiva()
