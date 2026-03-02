@@ -1,20 +1,20 @@
 
-# 🚀 COMPILADOR DE PILA - PROYECTO EDUCATIVO
+# COMPILADOR DE PILA - PROYECTO EDUCATIVO
 
-## 📋 DESCRIPCIÓN DEL PROYECTO
+## DESCRIPCIÓN DEL PROYECTO
 
 Este proyecto implementa un **compilador sencillo basado en pila** que demuestra los conceptos fundamentales del proceso de compilación. El sistema transforma expresiones matemáticas simples en bytecode que una máquina virtual puede ejecutar.
 
-## 🎯 OBJETIVOS DE APRENDIZAJE
+## OBJETIVOS DE APRENDIZAJE
 
 - Comprender cómo funcionan las máquinas virtuales basadas en pila
 - Entender el proceso de compilación: código fuente → bytecode → ejecución
 - Aprender la importancia de la pila en la evaluación de expresiones
 - Conocer la arquitectura de compiladores reales (JVM, Python VM)
 
-## 🏗️ ARQUITECTURA DEL SISTEMA
+## ARQUITECTURA DEL SISTEMA
 
-### 📁 Componentes Principales
+### Componentes Principales
 
 ```
 NuevoCompiladorPila/
@@ -25,7 +25,7 @@ NuevoCompiladorPila/
 └── README.md           # Esta documentación
 ```
 
-### 🔧 Función de Cada Componente
+### Función de Cada Componente
 
 #### 1. **pila.py** - Estructura de Datos Fundamental
 - **FUNCIÓN**: Almacenamiento temporal de operandos y resultados
@@ -47,7 +47,7 @@ NuevoCompiladorPila/
 - **IMPORTANCIA**: Permite entender cómo interactúan todos los componentes
 - **EJEMPLOS**: Expresiones matemáticas y manejo de variables
 
-## 🔄 PROCESO DE COMPILACIÓN
+## PROCESO DE COMPILACIÓN
 
 ### 1. Análisis de la Expresión
 ```
@@ -77,7 +77,7 @@ HALT
 ### 4. Ejecución en la Máquina Virtual
 La máquina virtual ejecuta cada instrucción modificando la pila y la memoria.
 
-## 💻 EJECUCIÓN DEL PROYECTO
+## EJECUCIÓN DEL PROYECTO
 
 ### Prerrequisitos
 - Python 3.7 o superior
@@ -91,7 +91,7 @@ python ejemplo.py
 
 ### Salida Esperada
 ```
-🔥 DEMOSTRACIÓN DEL COMPILADOR DE PILA 🔥
+DEMOSTRACIÓN DEL COMPILADOR DE PILA
 ============================================================
 
 === EXPRESIÓN MATEMÁTICA: (10 + 5) * (8 - 3) ===
@@ -110,19 +110,19 @@ POS  INSTRUCCIÓN      DESCRIPCIÓN
 09   PRINT           Imprimir valor
 10   HALT            Detener ejecución
 
-🚀 EJECUTANDO PROGRAMA 1:
+EJECUTANDO PROGRAMA 1:
 OUTPUT: 75
 
 === PROGRAMA CON VARIABLES ===
 ...
 
-🚀 EJECUTANDO PROGRAMA 2:
+EJECUTANDO PROGRAMA 2:
 OUTPUT: 31
 
-✅ DEMOSTRACIÓN COMPLETADA CON ÉXITO
+DEMOSTRACIÓN COMPLETADA CON ÉXITO
 ```
 
-## 🧮 EJEMPLOS DETALLADOS
+## EJEMPLOS DETALLADOS
 
 ### Ejemplo 1: Expresión Matemática Compleja
 **Expresión**: `(10 + 5) * (8 - 3) = 75`
@@ -145,7 +145,7 @@ z = x * y + 10  # z = 7 * 3 + 10 = 31
 print(z)
 ```
 
-## 🎓 CONCEPTOS CLAVE APRENDIDOS
+## CONCEPTOS CLAVE APRENDIDOS
 
 ### 1. **Máquinas Virtuales Basadas en Pila**
 - No necesitan registros explícitos
@@ -167,7 +167,7 @@ print(z)
 - Máquina Virtual: Ejecución del código
 - Memoria: Almacenamiento de variables
 
-## 🔍 RELACIÓN CON COMPILADORES REALES
+## RELACIÓN CON COMPILADORES REALES
 
 Este proyecto simplifica conceptos usados en compiladores profesionales:
 
@@ -178,7 +178,7 @@ Este proyecto simplifica conceptos usados en compiladores profesionales:
 | Nuestra Memoria | JVM heap, Python object space |
 | Nuestra Máquina Virtual | JVM, CPython interpreter |
 
-## 🚀 EXTENSIONES POSIBLES
+## EXTENSIONES POSIBLES
 
 - [ ] Análisis léxico y sintáctico completo
 - [ ] Soporte para tipos de datos adicionales
@@ -187,7 +187,7 @@ Este proyecto simplifica conceptos usados en compiladores profesionales:
 - [ ] Optimización de bytecode
 - [ ] Depurador integrado
 
-## 📚 REFERENCIAS
+## REFERENCIAS
 
 - *Compilers: Principles, Techniques, and Tools* - Aho, Lam, Sethi, Ullman
 - *Programming Language Pragmatics* - Michael L. Scott
@@ -196,4 +196,4 @@ Este proyecto simplifica conceptos usados en compiladores profesionales:
 
 ---
 
-**✨ Proyecto educativo creado para entender los fundamentos de la compilación**
+**Proyecto educativo creado para entender los fundamentos de la compilación**
